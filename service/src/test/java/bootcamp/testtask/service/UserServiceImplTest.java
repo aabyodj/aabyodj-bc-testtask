@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
@@ -45,8 +46,8 @@ class UserServiceImplTest {
         );
         userRepository.saveAll(entities);
         PageRequest request = PageRequest.of(0, 10, SORT_BY_EMAIL_ASC);
-        List<UserBriefDto> expected = userRepository.findAll(request)
-                .map(entity -> UserBriefDto.builder()
+        Page<UserBriefDto> expected = userRepository.findAll(request).map(
+                entity -> UserBriefDto.builder()
                         .id(entity.getId())
                         .fullName(new StringJoiner(" ")
                                 .add(entity.getSurname())
@@ -55,8 +56,7 @@ class UserServiceImplTest {
                                 .toString())
                         .email(entity.getEmail())
                         .role(entity.getRole())
-                        .build())
-                .toList();
+                        .build());
         assertIterableEquals(expected, userService.getBriefsList(request));
     }
 
