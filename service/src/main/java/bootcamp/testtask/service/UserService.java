@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface UserService {
 
-    List<UserDto> getAll(Pageable pageable);
+    List<UserBriefDto> getBriefsList(Pageable pageable);
 
     UserDto save(UserDto user);
 }

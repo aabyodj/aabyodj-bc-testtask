@@ -1,7 +1,7 @@
 package bootcamp.testtask.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.StringJoiner;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,19 +19,20 @@ public class UserServiceImpl implements UserService {
 
     @AutoLogged
     @Override
-    public List<UserDto> getAll(Pageable pageable) {
+    public List<UserBriefDto> getBriefsList(Pageable pageable) {
         return userRepository.findAll(pageable)
-                .stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
+                .map(this::toBriefDto)
+                .toList();
     }
 
-    private UserDto toDto(User entity) {
-        return UserDto.builder()
+    private UserBriefDto toBriefDto(User entity) {
+        return UserBriefDto.builder()
                 .id(entity.getId())
-                .surname(entity.getSurname())
-                .name(entity.getName())
-                .patronymic(entity.getPatronymic())
+                .fullName(new StringJoiner(" ")
+                        .add(entity.getSurname())
+                        .add(entity.getName())
+                        .add(entity.getPatronymic())
+                        .toString())
                 .email(entity.getEmail())
                 .role(entity.getRole())
                 .build();

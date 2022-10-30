@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import bootcamp.testtask.service.UserBriefDto;
 import bootcamp.testtask.service.UserDto;
 import bootcamp.testtask.service.UserService;
 import bootcamp.testtask.service.autolog.AutoLogged;
@@ -32,10 +33,10 @@ public class UserController {
 
     @GetMapping
     @AutoLogged
-    public List<UserDto> getAll(@RequestParam(defaultValue = "1") int page) {
+    public List<UserBriefDto> getAll(@RequestParam(defaultValue = "1") int page) {
         page = Integer.max(page - 1, 0);
         PageRequest request = PageRequest.of(page, restProperties.getPageSize(), SORT_BY_EMAIL_ASC);
-        return userService.getAll(request);
+        return userService.getBriefsList(request);
     }
 
     @PostMapping

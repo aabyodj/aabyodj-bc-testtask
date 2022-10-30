@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.StringJoiner;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,17 +45,19 @@ class UserServiceImplTest {
         );
         userRepository.saveAll(entities);
         PageRequest request = PageRequest.of(0, 10, SORT_BY_EMAIL_ASC);
-        List<UserDto> expected = userRepository.findAll(request).stream()
-                .map(entity -> UserDto.builder()
+        List<UserBriefDto> expected = userRepository.findAll(request)
+                .map(entity -> UserBriefDto.builder()
                         .id(entity.getId())
-                        .surname(entity.getSurname())
-                        .name(entity.getName())
-                        .patronymic(entity.getPatronymic())
+                        .fullName(new StringJoiner(" ")
+                                .add(entity.getSurname())
+                                .add(entity.getName())
+                                .add(entity.getPatronymic())
+                                .toString())
                         .email(entity.getEmail())
                         .role(entity.getRole())
                         .build())
-                .collect(Collectors.toList());
-        assertIterableEquals(expected, userService.getAll(request));
+                .toList();
+        assertIterableEquals(expected, userService.getBriefsList(request));
     }
 
     @Test
