@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import bootcamp.testtask.repository.User;
 import bootcamp.testtask.repository.UserRepository;
+import bootcamp.testtask.service.autolog.AutoLogged;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -16,6 +17,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    @AutoLogged
     @Override
     public List<UserDto> getAll(Sort sort) {
         return userRepository.findAll(sort)
@@ -35,6 +37,7 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    @AutoLogged
     @Override
     public UserDto save(UserDto dto) {
         User entity = toEntity(dto);
